@@ -1,0 +1,27 @@
+{
+  "name": "phase_diagram",
+  "description": "Phase diagram with criticality metrics",
+  "mu_range": [
+    0.08,
+    0.25
+  ],
+  "mu_steps": 15,
+  "sigma_range": [
+    0.005,
+    0.035
+  ],
+  "sigma_steps": 15,
+  "grid_size": 128,
+  "kernel_radius": 13,
+  "dt": 0.1,
+  "warmup_steps": 200,
+  "measure_steps": 300,
+  "compute_lyapunov": true,
+  "lyapunov_trials": 3,
+  "compute_correlation": true,
+  "compute_information": true,
+  "compute_susceptibility": false,
+  "n_workers": 4,
+  "seed": 42,
+  "output_dir": "experiments"
+}
