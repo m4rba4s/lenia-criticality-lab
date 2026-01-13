@@ -4,17 +4,19 @@
 
 Systematic scanning of 1,600 parameter configurations (40×40 grid in (μ, σ) space) revealed three distinct dynamical regimes (Figure 1):
 
-**Dead regime (λ → −∞):** For σ < 0.012 or μ < 0.11, initial configurations decay rapidly to the empty state. The growth function is too narrow or peaked at values rarely achieved by the convolution, preventing self-sustaining activity.
+**Dead regime (λ undefined):** For σ < 0.012 or μ < 0.11, initial configurations decay rapidly to the empty state. The growth function is too narrow or peaked at values rarely achieved by the convolution, preventing self-sustaining activity. We denote this as "λ → −∞" since the paired-trajectory method yields unbounded negative values when the reference trajectory approaches zero.
 
 **Chaotic regime (λ > 0.05):** For σ > 0.035, patterns exhibit explosive growth followed by turbulent dynamics. Small perturbations amplify exponentially, and no stable structures form.
 
 **Critical regime (|λ| < 0.01):** A narrow band around μ ∈ [0.14, 0.17] and σ ∈ [0.014, 0.022] supports stable, motile organisms with near-zero Lyapunov exponents. This region corresponds to the "Orbium" morphology documented by Chan [4].
 
-| Regime | Fraction | Mean λ | Characteristic |
-|--------|----------|--------|----------------|
-| Dead | 58% | −∞ | Rapid decay |
+| Regime | Fraction | Mean λ (± SD) | Characteristic |
+|--------|----------|---------------|----------------|
+| Dead | 58% | undefined* | Rapid decay |
 | Chaotic | 31% | +0.12 ± 0.08 | Turbulent |
-| Critical | 11% | +0.003 ± 0.008 | Stable organisms |
+| Critical | 11% | +0.003 ± 0.015 | Stable organisms |
+
+*λ undefined for dead regime; trajectories decay to zero, invalidating divergence measurement.
 
 The critical regime spans approximately 175 of 1,600 configurations. Within this regime, λ values cluster tightly around zero (interquartile range: [−0.005, +0.008]), consistent with the edge-of-chaos hypothesis.
 
@@ -25,10 +27,11 @@ Figure 5 shows the distribution of Lyapunov exponents across all viable (non-dea
 - **Peak 1 (λ ≈ 0):** Corresponding to the critical regime, where organisms maintain stable structure while remaining sensitive to perturbations.
 - **Peak 2 (λ ≈ 0.15):** Corresponding to chaotic dynamics with exponential divergence.
 
-For the critical regime specifically:
-- Mean λ = 0.003 ± 0.002 (SEM, n=175)
-- 95% CI: [−0.001, +0.007]
-- Median λ = 0.002
+For the critical regime specifically (n = 175 configurations, 3 trials each):
+- Mean λ = +0.003 (SD = 0.015, SEM = 0.001)
+- 95% CI: [+0.001, +0.005]
+- Median λ = +0.002
+- IQR: [−0.005, +0.008]
 
 The near-zero mean confirms that stable Lenia organisms operate at the boundary between order and chaos.
 
@@ -106,7 +109,7 @@ Additional exploration identified the working range for hole strength parameter 
 - **s ∈ [0.45, 0.65]:** NAND behavior observed; single inputs survive, double inputs collapse.
 - **s > 0.75:** Perturbations too strong; even single inputs cause collapse.
 
-The working range spans approximately 40% of the [0, 1] amplitude scale, indicating reasonable tolerance.
+The working range spans 20% of the [0, 1] amplitude scale (width 0.20), indicating moderate tolerance.
 
 ## 3.5 Signal Propagation
 
@@ -132,7 +135,7 @@ Lagged cross-correlations between adjacent probes (τ = 5 steps):
 | P₄–P₅ | 0.42 | 0.007 |
 | P₅–P₆ | 0.31 | 0.051 |
 
-Correlation strength decreases with distance from the perturbation source (Spearman ρ = −0.90, p = 0.037), consistent with signal attenuation.
+Correlation strength shows a decreasing trend with distance from the perturbation source (5 probe pairs; visual inspection confirms attenuation pattern, though n is insufficient for robust statistical testing).
 
 ### 3.5.3 Interpretation
 
@@ -140,19 +143,31 @@ The observed correlations demonstrate that local perturbations propagate through
 
 ## 3.6 Reservoir Computing
 
-### 3.6.1 XOR Classification
+### 3.6.1 Evaluation Protocol
 
-Using the Lenia organism as a reservoir with linear readout:
+To test nonlinear computation capacity, we used Lenia as a reservoir for XOR classification:
 
-| Task | Baseline (raw inputs) | Lenia reservoir |
-|------|----------------------|-----------------|
-| XOR | 50% ± 0% | 94% ± 6% |
-| AND | 75% ± 10% | 100% ± 0% |
-| OR | 75% ± 10% | 100% ± 0% |
+**Setup:**
+- Reservoir: 48×48 Lenia grid (μ = 0.15, σ = 0.015)
+- Features: 128 pixel values at fixed random indices + 4 global statistics (total: 132 features)
+- Feature indices selected once and held constant across all trials (anti-leakage measure)
+- Readout: Logistic regression with L2 regularization (α = 1.0)
 
-The reservoir achieves near-perfect XOR classification, demonstrating nonlinear transformation of inputs. The baseline (linear classifier on 2D inputs) achieves chance performance on XOR, as expected for a linearly inseparable problem.
+**Evaluation:**
+- Dataset: 16 samples (4 XOR patterns × 4 repetitions with different seeds)
+- Validation: 4-fold cross-validation (stratified, each fold contains one instance of each pattern)
+- 10 random restarts with different feature index selections; report mean ± SD
 
-### 3.6.2 Comparison to NAND Gate
+### 3.6.2 XOR Results
+
+| Method | Accuracy (mean ± SD) | Notes |
+|--------|---------------------|-------|
+| Baseline (linear on raw inputs) | 50% ± 0% | Expected: XOR is linearly inseparable |
+| Lenia reservoir | 94% ± 6% | Across 10 restarts |
+
+The reservoir achieves well above chance XOR classification, demonstrating that Lenia dynamics perform nonlinear transformation of inputs sufficient for solving a linearly inseparable problem.
+
+### 3.6.3 Comparison to NAND Gate
 
 The reservoir computing result (XOR via trained readout) and the NAND gate result (via self-repair threshold) represent complementary forms of computation:
 

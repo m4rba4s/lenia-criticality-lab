@@ -26,7 +26,7 @@ For Lenia, this raises a natural question: do the lifelike patterns that Chan an
 
 ## 1.4 Our Contribution
 
-We present the first systematic investigation of computation in Lenia. Our contributions are:
+To our knowledge, we present the first systematic investigation of computation in Lenia. Our contributions are:
 
 1. **Phase diagram characterization.** We map 1,600 parameter configurations in the $(\mu, \sigma)$ space, estimating Lyapunov exponents via Benettin's algorithm. We identify a critical regime where $\lambda \approx 0$, corresponding to the parameter region that supports stable, motile organisms.
 

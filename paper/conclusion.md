@@ -1,8 +1,8 @@
 # Conclusion
 
-We have presented the first systematic investigation of intrinsic computation in Lenia, a continuous cellular automaton exhibiting lifelike self-organizing patterns. Our findings establish three main results:
+To our knowledge, we have presented the first systematic investigation of intrinsic computation in Lenia, a continuous cellular automaton exhibiting lifelike self-organizing patterns. Our findings establish three main results:
 
-**1. Critical regime identification.** Scanning 1,600 parameter configurations, we identified a critical regime (~11% of explored space) where Lyapunov exponents approach zero (λ = 0.003 ± 0.002). This regime coincides with stable, motile organisms, supporting the edge-of-chaos hypothesis for computation in self-organizing systems.
+**1. Critical regime identification.** Scanning 1,600 parameter configurations, we identified a critical regime (~11% of explored space) where Lyapunov exponents approach zero (mean λ = +0.003, SD = 0.015). This regime coincides with stable, motile organisms, supporting the edge-of-chaos hypothesis for computation in self-organizing systems.
 
 **2. Emergent NAND gate.** We discovered that Lenia organisms implement NAND-like computation through self-repair dynamics. Single perturbations (removing ~15% local mass) are healed; double simultaneous perturbations exceed the repair threshold, causing organism collapse. This pattern—survive unless both inputs active—matches the NAND truth table, validated across 80 trials (Fisher's exact test, p = 2.4 × 10⁻¹⁶) with robustness to position jitter (±3 pixels) and amplitude variation (±20%).
 

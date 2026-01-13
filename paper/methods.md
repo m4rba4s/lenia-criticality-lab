@@ -25,14 +25,17 @@ We scanned the parameter space systematically:
 | **Configurations** | — | — | **1,600** |
 
 For each (μ, σ) configuration:
-1. Initialize with random blob (size 0.2, density 0.5, seed=42)
+1. Initialize with random blob (size 0.2, density 0.5, seed=42 for morphology discovery)
 2. Evolve 300 steps
-3. Record: mean mass, final mass, Lyapunov exponent
+3. Record: mean mass, final mass
+4. Estimate Lyapunov exponent (separate procedure, see §2.3)
+
+**Note:** Phase diagram morphology uses fixed seed=42 for reproducibility. Lyapunov estimation uses 3 trials with different seeds and averages them.
 
 **Classification criteria:**
 - Dead: final mass < 10
 - Alive: final mass ≥ 10
-- Critical: |λ| < 0.01
+- Critical: |λ| < 0.01 (based on averaged λ from 3 trials)
 
 ## 2.3 Lyapunov Exponent Estimation
 
@@ -50,7 +53,7 @@ We estimated the largest Lyapunov exponent λ using Benettin's algorithm [11] wi
      - Update: $W_{pert} \leftarrow W_{ref} + \delta_t$
 5. Estimate: $\lambda = \frac{1}{n} \sum_t \Lambda_t / \tau$ where $n = T_{measure}/\tau$
 
-**Averaging:** 3 independent trials per configuration, different seeds. Report mean ± SEM.
+**Averaging:** 3 independent trials per configuration (different seeds). Per-configuration λ is the mean of 3 trials. Results section reports across-configuration statistics: mean ± SD for regime summaries, with SEM for confidence intervals.
 
 **Rationale:** Renormalization prevents numerical overflow/underflow while accumulating the log-stretching factors that define λ.
 
@@ -109,7 +112,7 @@ where $M = \sum_{i,j} A_{i,j}$ is total mass and $\tau_{collapse} = 25$.
 ### 2.5.3 Correlation Analysis
 - **Lagged cross-correlation:** Between adjacent probes with lag τ = 5 steps
 - **Formula:** $r_{i,i+1}(\tau) = \text{corr}(\Delta_i(t), \Delta_{i+1}(t+\tau))$
-- **Distance trend:** Spearman correlation between probe separation and correlation magnitude
+- **Distance trend:** Visual inspection of correlation magnitude vs probe distance (n = 5 probe pairs, insufficient for robust statistical testing)
 
 ## 2.6 Reservoir Computing
 
@@ -125,15 +128,17 @@ Inputs encoded as Gaussian blobs at fixed positions around organism center:
 
 ### 2.6.3 Feature Extraction
 From final reservoir state, extract:
-- 128 randomly sampled pixel values (fixed indices across trials)
+- 128 randomly sampled pixel values (indices fixed once per restart, held constant across all samples within that restart — anti-leakage measure)
 - 4 global statistics: mean, std, max, mass ratio
 
 Feature vector dimension: 132
 
-### 2.6.4 Readout
-- **Model:** Ridge regression (α = 1.0) for regression, Logistic regression for classification
-- **Training:** XOR dataset with 16 samples (4 unique patterns × 4 repeats)
-- **Baseline:** Linear classifier on raw 2D inputs (expected 50% for XOR)
+### 2.6.4 Readout and Evaluation
+- **Model:** Logistic regression with L2 regularization (α = 1.0)
+- **Dataset:** XOR with 16 samples (4 unique patterns × 4 repetitions, different seeds)
+- **Validation:** 4-fold stratified cross-validation (each fold contains one instance of each pattern)
+- **Restarts:** 10 random restarts with different feature index selections; report mean ± SD
+- **Baseline:** Logistic regression on raw 2D inputs (expected 50% for XOR, which is linearly inseparable)
 
 ## 2.7 Software and Reproducibility
 
