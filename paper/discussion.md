@@ -10,6 +10,12 @@ Our central finding—that Lenia organisms implement NAND-like computation throu
 
 ...the NAND gate we observe requires no engineering, training, or evolution. It emerges spontaneously from the organism's homeostatic response to damage.
 
+### Destructive vs. Reusable Computation
+
+A crucial distinction from conventional logic gates: our NAND-like mechanism is *destructive*. The organism is simultaneously the computational substrate and the output representation—collapse yields "0" but eliminates the gate. Electronic NAND gates, by contrast, are reusable: the same physical transistors can evaluate new inputs indefinitely.
+
+This has implications for functional completeness. While any Boolean function can theoretically be constructed from NAND gates, our mechanism would require either: (a) a population of organisms, each used once; (b) a regeneration mechanism to restore collapsed organisms; or (c) identification of non-destructive input/output modalities.
+
 ### Mechanism Interpretation
 
 The underlying mechanism can be understood as follows:
@@ -22,7 +28,7 @@ The underlying mechanism can be understood as follows:
 
 This mechanism has parallels in biological systems, where organisms can recover from limited damage but fail catastrophically when multiple stressors exceed compensatory capacity [13].
 
-## 4.2 Functional Completeness and Universality
+## 4.2 Toward Functional Completeness: Challenges
 
 NAND is functionally complete: any Boolean function can be expressed using only NAND gates. In principle, this opens a pathway to universal computation in Lenia. However, significant challenges remain:
 
@@ -49,7 +55,7 @@ Digital logic requires synchronized operations. The continuous, asynchronous nat
 
 ## 4.3 Edge of Chaos and Computation
 
-Our phase diagram results support the edge-of-chaos hypothesis: the parameter region supporting stable organisms coincides with near-zero Lyapunov exponents. This adds to evidence from Boolean networks [8], neural systems [10], and reservoir computing [9] that computation is optimized at criticality.
+Our phase diagram results are consistent with the edge-of-chaos hypothesis: the parameter region supporting stable organisms coincides with near-zero Lyapunov exponents (λ ≈ 0). We note that λ ≈ 0 is a necessary but not sufficient condition for criticality; full confirmation would require additional signatures such as power-law spatial correlations, diverging susceptibility, or scale-free avalanche distributions, which we have not measured. This adds to evidence from Boolean networks [8], neural systems [10], and reservoir computing [9] that computation is optimized at criticality.
 
 However, we note an important distinction. In reservoir computing, criticality optimizes the reservoir's ability to:
 - Maintain memory of past inputs
@@ -112,6 +118,10 @@ As noted, we have not connected multiple gates. Without cascading, the computati
 ### 4.5.5 Idealized Conditions
 
 Our simulations use deterministic dynamics, uniform grids, and idealized initial conditions. Physical implementations would face noise, boundary effects, and initialization challenges.
+
+### 4.5.6 Absence of Null Models
+
+We did not test null models that would strengthen causal claims: (a) random damage control for NAND (holes at random positions rather than symmetric placement); (b) shuffled reservoir states to verify that temporal dynamics, not just spatial structure, contribute to XOR performance; (c) non-critical parameter comparison to confirm that near-critical dynamics are necessary for the observed behaviors.
 
 ## 4.6 Future Directions
 

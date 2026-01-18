@@ -37,6 +37,8 @@ For each (μ, σ) configuration:
 - Alive: final mass ≥ 10
 - Critical: |λ| < 0.01 (based on averaged λ from 3 trials)
 
+**Scope of criticality claim:** We use λ ≈ 0 as an operational proxy for near-critical dynamics. Full characterization of criticality would require additional signatures (power-law correlations, diverging susceptibility, 1/f spectra) which we do not measure here. Our claim is therefore that stable Lenia organisms operate in a *near-critical regime* where perturbations neither decay rapidly (ordered) nor amplify unboundedly (chaotic).
+
 ## 2.3 Lyapunov Exponent Estimation
 
 We estimated the largest Lyapunov exponent λ using Benettin's algorithm [11] with explicit renormalization:
@@ -112,7 +114,7 @@ where $M = \sum_{i,j} A_{i,j}$ is total mass and $\tau_{collapse} = 25$.
 ### 2.5.3 Correlation Analysis
 - **Lagged cross-correlation:** Between adjacent probes with lag τ = 5 steps
 - **Formula:** $r_{i,i+1}(\tau) = \text{corr}(\Delta_i(t), \Delta_{i+1}(t+\tau))$
-- **Distance trend:** Visual inspection of correlation magnitude vs probe distance (n = 5 probe pairs, insufficient for robust statistical testing)
+- **Distance trend:** Visual inspection suggests correlation magnitude decreases with distance from source (n = 5 probe pairs). We note that correlation does not establish causation; transfer entropy analysis would be required to confirm directional information flow, which we leave to future work.
 
 ## 2.6 Reservoir Computing
 

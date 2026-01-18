@@ -32,7 +32,7 @@ To our knowledge, we present the first systematic investigation of computation i
 
 2. **Signal propagation.** We demonstrate that local perturbations propagate through Lenia organisms with measurable temporal structure. Lagged cross-correlations between spatially separated measurement points reach $r = 0.84$, with correlation strength decreasing with distance.
 
-3. **Emergent NAND gate.** We discover that Lenia organisms implement NAND-like computation through self-repair dynamics. Single perturbations (removing ~15% local mass) are absorbed and healed. Two simultaneous perturbations exceed the repair threshold, causing organism collapse. This survive-unless-both-active pattern matches the NAND truth table—a functionally complete gate from which any Boolean function can be constructed.
+3. **Emergent NAND-like threshold behavior.** We discover that Lenia organisms exhibit NAND-like input discrimination through self-repair dynamics: single perturbations are tolerated, while simultaneous dual perturbations cause collapse. This survive-unless-both-active pattern matches the NAND truth table—a functionally complete gate from which any Boolean function can be constructed.
 
 4. **Statistical validation.** We validate the NAND behavior across 80 trials with randomized seeds (Fisher's exact test, $p = 2.4 \times 10^{-16}$) and demonstrate robustness to position jitter (±3 pixels) and amplitude variation (±20%).
 
@@ -40,7 +40,7 @@ To our knowledge, we present the first systematic investigation of computation i
 
 Our findings suggest that self-organizing continuous cellular automata can realize computational primitives through intrinsic dynamics, without explicit programming of logical operations. The mechanism—a damage threshold arising from self-repair—is qualitatively different from the constructive logic gates of discrete CA (glider collisions in Life) or the trained readouts of reservoir computing. Instead, computation emerges from the organism's homeostatic response to perturbation.
 
-Since NAND is functionally complete, these results open a pathway toward richer computation in continuous self-organizing systems. Key challenges remain: demonstrating signal cascading between gates, validating across diverse morphologies, and establishing causal (not merely correlational) information flow.
+While NAND is functionally complete in digital logic, we emphasize that our mechanism is destructive—the organism itself serves as the gate, and its collapse precludes direct reuse. Nevertheless, these results suggest that self-organizing systems can perform threshold-based discrimination, a potential building block for more complex computation if non-destructive or cascadable variants can be identified. Key challenges remain: demonstrating signal cascading between gates, validating across diverse morphologies, and establishing causal (not merely correlational) information flow.
 
 ## 1.6 Paper Organization
 

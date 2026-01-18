@@ -54,7 +54,7 @@ $$p = 2.4 \times 10^{-16}$$
 
 The null hypothesis—that survival is independent of whether one or both inputs are active—is rejected with overwhelming confidence.
 
-### 3.3.2 NAND Truth Table Correspondence
+### 3.3.2 NAND-like Truth Table Correspondence
 
 The observed behavior matches the NAND truth table:
 
@@ -77,6 +77,8 @@ Figure 6 illustrates the mechanism:
 
 This threshold-based mechanism is qualitatively different from constructive logic gates (glider collisions) or trained readouts. Computation emerges from the organism's homeostatic limits.
 
+**Important caveat:** Unlike electronic logic gates, this mechanism is inherently destructive. The organism serves as both the computational substrate and the output signal—its collapse represents the logical "0" but also eliminates the gate itself. This precludes direct cascading without additional mechanisms to propagate the collapse event to downstream organisms.
+
 ## 3.4 Robustness Analysis
 
 ### 3.4.1 Position Jitter
@@ -88,7 +90,7 @@ We tested sensitivity to perturbation placement by adding uniform random offsets
 | Single input (01/10) | 92.5% survive | 90% survive | −2.5% |
 | Double input (11) | 5% survive | 25% survive | +20% |
 
-The gate remains functional under position uncertainty, though the double-input condition shows increased survival when perturbations occasionally miss critical regions.
+The gate retains discriminative power under position uncertainty, though sensitivity is evident: the [1,1] condition shows 5× increased survival (5% → 25%) when perturbations occasionally miss critical regions. This indicates that precise positioning contributes to gate reliability.
 
 ### 3.4.2 Amplitude Variation
 
@@ -139,7 +141,7 @@ Correlation strength shows a decreasing trend with distance from the perturbatio
 
 ### 3.5.3 Interpretation
 
-The observed correlations demonstrate that local perturbations propagate through Lenia organisms with measurable temporal structure. However, correlation does not establish causation. Transfer entropy analysis (planned future work) would be required to confirm directional information flow.
+The observed correlations demonstrate that local perturbations propagate through Lenia organisms with measurable temporal structure. However, we emphasize three limitations: (1) correlation does not establish causation—the pattern could arise from common driving or simple wave physics rather than information transmission; (2) n = 40 timepoints provides limited statistical power; (3) the decreasing trend across 5 probe pairs is based on visual inspection. Transfer entropy analysis would be required to confirm directional, causal information flow.
 
 ## 3.6 Reservoir Computing
 
@@ -166,6 +168,8 @@ To test nonlinear computation capacity, we used Lenia as a reservoir for XOR cla
 | Lenia reservoir | 94% ± 6% | Across 10 restarts |
 
 The reservoir achieves well above chance XOR classification, demonstrating that Lenia dynamics perform nonlinear transformation of inputs sufficient for solving a linearly inseparable problem.
+
+**Limitations:** The XOR evaluation uses a small dataset (16 training samples, 4 test samples), limiting statistical power. The 94% ± 6% accuracy corresponds to approximately one misclassification and should be interpreted cautiously. Standard reservoir computing benchmarks (NARMA-10, Mackey-Glass prediction) would provide more robust evaluation, which we leave to future work.
 
 ### 3.6.3 Comparison to NAND Gate
 

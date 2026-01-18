@@ -458,3 +458,336 @@ class SusceptibilityMeasure:
             chi = 0
 
         return float(chi)
+
+
+# =============================================================================
+# TRANSFER ENTROPY - Causal Information Flow
+# =============================================================================
+
+@dataclass
+class TransferEntropyResult:
+    """Results from transfer entropy analysis."""
+    te_forward: float          # TE(X→Y): information flow from X to Y
+    te_backward: float         # TE(Y→X): information flow from Y to X
+    net_flow: float            # TE(X→Y) - TE(Y→X): net directional flow
+    significance: float        # p-value from surrogate test
+    n_samples: int             # Number of samples used
+
+    @property
+    def is_significant(self) -> bool:
+        return self.significance < 0.05
+
+    @property
+    def direction(self) -> str:
+        if not self.is_significant:
+            return "none"
+        return "X→Y" if self.net_flow > 0 else "Y→X"
+
+    def __repr__(self):
+        return (f"TransferEntropyResult(TE(X→Y)={self.te_forward:.4f}, "
+                f"TE(Y→X)={self.te_backward:.4f}, net={self.net_flow:+.4f}, "
+                f"p={self.significance:.4f}, dir={self.direction})")
+
+
+class TransferEntropyEstimator:
+    """
+    Estimate Transfer Entropy between time series.
+
+    Transfer Entropy measures directed information flow:
+    TE(X→Y) = H(Y_t | Y_past) - H(Y_t | Y_past, X_past)
+
+    This quantifies how much knowing X's past reduces uncertainty
+    about Y's future, beyond what Y's own past tells us.
+
+    If TE(X→Y) > TE(Y→X), information flows predominantly X→Y.
+
+    Reference:
+        Schreiber, T. (2000). Measuring information transfer.
+        Physical Review Letters, 85(2), 461.
+    """
+
+    def __init__(self,
+                 n_bins: int = 8,
+                 history_length: int = 3,
+                 lag: int = 1,
+                 n_surrogates: int = 100):
+        """
+        Args:
+            n_bins: Number of bins for discretization (8 is typical)
+            history_length: How many past values to consider (k)
+            lag: Prediction lag (usually 1)
+            n_surrogates: Number of surrogate tests for significance
+        """
+        self.n_bins = n_bins
+        self.history_length = history_length
+        self.lag = lag
+        self.n_surrogates = n_surrogates
+
+    def _discretize(self, x: np.ndarray) -> np.ndarray:
+        """Discretize continuous time series into bins."""
+        # Normalize to [0, 1]
+        x_min, x_max = np.min(x), np.max(x)
+        if x_max - x_min < 1e-10:
+            return np.zeros_like(x, dtype=int)
+        x_norm = (x - x_min) / (x_max - x_min + 1e-10)
+        # Bin
+        return np.clip((x_norm * self.n_bins).astype(int), 0, self.n_bins - 1)
+
+    def _embed(self, x: np.ndarray, k: int) -> np.ndarray:
+        """
+        Create delay embedding of time series.
+        Returns array of shape (n_samples, k) with k consecutive values.
+        """
+        n = len(x)
+        if n <= k:
+            return np.array([]).reshape(0, k)
+        embedded = np.zeros((n - k, k), dtype=int)
+        for i in range(k):
+            embedded[:, i] = x[i:n-k+i]
+        return embedded
+
+    def _joint_histogram(self, *arrays) -> np.ndarray:
+        """Compute joint histogram of multiple arrays."""
+        # Combine into single index
+        combined = arrays[0].copy()
+        multiplier = self.n_bins
+        for arr in arrays[1:]:
+            combined = combined * multiplier + arr
+            multiplier *= self.n_bins
+
+        # Count occurrences
+        counts = np.bincount(combined, minlength=multiplier)
+        return counts / counts.sum()
+
+    def _entropy(self, p: np.ndarray) -> float:
+        """Compute entropy of probability distribution."""
+        p = p[p > 0]
+        return -np.sum(p * np.log2(p))
+
+    def _conditional_entropy(self, joint_p: np.ndarray,
+                             marginal_dims: int) -> float:
+        """
+        Compute conditional entropy H(X|Y) from joint distribution.
+
+        H(X|Y) = H(X,Y) - H(Y)
+        """
+        # Marginal over last dimensions
+        marginal_p = joint_p.copy()
+        for _ in range(marginal_dims):
+            marginal_p = marginal_p.reshape(-1, self.n_bins).sum(axis=1)
+
+        h_joint = self._entropy(joint_p)
+        h_marginal = self._entropy(marginal_p)
+
+        return h_joint - h_marginal
+
+    def _compute_te(self, x: np.ndarray, y: np.ndarray) -> float:
+        """
+        Compute transfer entropy TE(X→Y).
+
+        TE(X→Y) = H(Y_t | Y_past) - H(Y_t | Y_past, X_past)
+
+        = I(Y_t; X_past | Y_past)
+        """
+        k = self.history_length
+        lag = self.lag
+
+        # Discretize
+        x_d = self._discretize(x)
+        y_d = self._discretize(y)
+
+        n = len(x_d)
+        if n < k + lag + 1:
+            return 0.0
+
+        # Create arrays:
+        # y_future: Y(t+lag)
+        # y_past: [Y(t), Y(t-1), ..., Y(t-k+1)]
+        # x_past: [X(t), X(t-1), ..., X(t-k+1)]
+
+        valid_start = k
+        valid_end = n - lag
+        n_samples = valid_end - valid_start
+
+        if n_samples < 10:
+            return 0.0
+
+        y_future = y_d[valid_start + lag:valid_end + lag]
+
+        # Build past embeddings
+        y_past = np.zeros((n_samples, k), dtype=int)
+        x_past = np.zeros((n_samples, k), dtype=int)
+
+        for i in range(k):
+            y_past[:, i] = y_d[valid_start - i - 1:valid_end - i - 1]
+            x_past[:, i] = x_d[valid_start - i - 1:valid_end - i - 1]
+
+        # Convert to single indices for histogram
+        def to_index(arr):
+            idx = arr[:, 0]
+            mult = self.n_bins
+            for col in range(1, arr.shape[1]):
+                idx = idx * mult + arr[:, col]
+            return idx
+
+        y_past_idx = to_index(y_past)
+        x_past_idx = to_index(x_past)
+
+        # Compute entropies via counting
+        # H(Y_t | Y_past) = H(Y_t, Y_past) - H(Y_past)
+        # H(Y_t | Y_past, X_past) = H(Y_t, Y_past, X_past) - H(Y_past, X_past)
+
+        # Count joint distributions
+        max_y_past = self.n_bins ** k
+        max_x_past = self.n_bins ** k
+
+        # H(Y_t, Y_past)
+        joint_yt_ypast = np.zeros(self.n_bins * max_y_past)
+        for yt, yp in zip(y_future, y_past_idx):
+            joint_yt_ypast[yt * max_y_past + yp] += 1
+        joint_yt_ypast /= joint_yt_ypast.sum() + 1e-10
+
+        # H(Y_past)
+        h_ypast = np.zeros(max_y_past)
+        for yp in y_past_idx:
+            h_ypast[yp] += 1
+        h_ypast /= h_ypast.sum() + 1e-10
+
+        # H(Y_t, Y_past, X_past)
+        joint_all = {}
+        for yt, yp, xp in zip(y_future, y_past_idx, x_past_idx):
+            key = (yt, yp, xp)
+            joint_all[key] = joint_all.get(key, 0) + 1
+        total = sum(joint_all.values())
+
+        # H(Y_past, X_past)
+        joint_ypast_xpast = {}
+        for yp, xp in zip(y_past_idx, x_past_idx):
+            key = (yp, xp)
+            joint_ypast_xpast[key] = joint_ypast_xpast.get(key, 0) + 1
+
+        # Compute conditional entropies
+        h_yt_given_ypast = self._entropy(joint_yt_ypast) - self._entropy(h_ypast)
+
+        # H(Y_t | Y_past, X_past) via direct computation
+        joint_probs = np.array(list(joint_all.values())) / total
+        h_yt_ypast_xpast = self._entropy(joint_probs)
+
+        cond_probs = np.array(list(joint_ypast_xpast.values())) / total
+        h_ypast_xpast = self._entropy(cond_probs)
+
+        h_yt_given_ypast_xpast = h_yt_ypast_xpast - h_ypast_xpast
+
+        # Transfer entropy
+        te = h_yt_given_ypast - h_yt_given_ypast_xpast
+
+        return max(0, te)  # TE should be non-negative
+
+    def _create_surrogate(self, x: np.ndarray) -> np.ndarray:
+        """Create time-shuffled surrogate that breaks temporal structure."""
+        surrogate = x.copy()
+        np.random.shuffle(surrogate)
+        return surrogate
+
+    def estimate(self, x: np.ndarray, y: np.ndarray) -> TransferEntropyResult:
+        """
+        Estimate transfer entropy in both directions with significance test.
+
+        Args:
+            x: Time series X
+            y: Time series Y
+
+        Returns:
+            TransferEntropyResult with TE values and significance
+        """
+        x = np.asarray(x).flatten()
+        y = np.asarray(y).flatten()
+
+        # Ensure same length
+        n = min(len(x), len(y))
+        x, y = x[:n], y[:n]
+
+        # Compute actual TE
+        te_xy = self._compute_te(x, y)  # X→Y
+        te_yx = self._compute_te(y, x)  # Y→X
+
+        # Significance via surrogate testing
+        surrogate_tes = []
+        for _ in range(self.n_surrogates):
+            x_surr = self._create_surrogate(x)
+            te_surr = self._compute_te(x_surr, y)
+            surrogate_tes.append(te_surr)
+
+        surrogate_tes = np.array(surrogate_tes)
+        p_value = np.mean(surrogate_tes >= te_xy)
+
+        return TransferEntropyResult(
+            te_forward=te_xy,
+            te_backward=te_yx,
+            net_flow=te_xy - te_yx,
+            significance=p_value,
+            n_samples=n
+        )
+
+    def analyze_probe_chain(self, probe_histories: List[np.ndarray]
+                           ) -> Dict[str, TransferEntropyResult]:
+        """
+        Analyze information flow through a chain of probes.
+
+        Args:
+            probe_histories: List of time series for each probe [P1, P2, P3, ...]
+
+        Returns:
+            Dict mapping "P1→P2", "P2→P3", etc. to TransferEntropyResult
+        """
+        results = {}
+        n_probes = len(probe_histories)
+
+        for i in range(n_probes - 1):
+            key = f"P{i+1}→P{i+2}"
+            x = np.array(probe_histories[i])
+            y = np.array(probe_histories[i+1])
+
+            if len(x) > 10 and len(y) > 10:
+                results[key] = self.estimate(x, y)
+
+        return results
+
+
+def compute_transfer_entropy_matrix(probe_histories: List[np.ndarray],
+                                    n_bins: int = 8,
+                                    history_length: int = 3
+                                    ) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Compute full transfer entropy matrix between all probe pairs.
+
+    Args:
+        probe_histories: List of time series for each probe
+        n_bins: Discretization bins
+        history_length: History embedding length
+
+    Returns:
+        (te_matrix, significance_matrix): NxN arrays where
+        te_matrix[i,j] = TE(Pi→Pj)
+    """
+    n = len(probe_histories)
+    te_matrix = np.zeros((n, n))
+    sig_matrix = np.ones((n, n))
+
+    estimator = TransferEntropyEstimator(
+        n_bins=n_bins,
+        history_length=history_length,
+        n_surrogates=50  # Fewer for matrix computation
+    )
+
+    for i in range(n):
+        for j in range(n):
+            if i != j:
+                x = np.array(probe_histories[i])
+                y = np.array(probe_histories[j])
+                if len(x) > 10 and len(y) > 10:
+                    result = estimator.estimate(x, y)
+                    te_matrix[i, j] = result.te_forward
+                    sig_matrix[i, j] = result.significance
+
+    return te_matrix, sig_matrix

@@ -4,13 +4,13 @@ To our knowledge, we have presented the first systematic investigation of intrin
 
 **1. Critical regime identification.** Scanning 1,600 parameter configurations, we identified a critical regime (~11% of explored space) where Lyapunov exponents approach zero (mean λ = +0.003, SD = 0.015). This regime coincides with stable, motile organisms, supporting the edge-of-chaos hypothesis for computation in self-organizing systems.
 
-**2. Emergent NAND gate.** We discovered that Lenia organisms implement NAND-like computation through self-repair dynamics. Single perturbations (removing ~15% local mass) are healed; double simultaneous perturbations exceed the repair threshold, causing organism collapse. This pattern—survive unless both inputs active—matches the NAND truth table, validated across 80 trials (Fisher's exact test, p = 2.4 × 10⁻¹⁶) with robustness to position jitter (±3 pixels) and amplitude variation (±20%).
+**2. Emergent NAND-like threshold behavior.** We discovered that Lenia organisms implement NAND-like computation through self-repair dynamics. Single perturbations (removing ~15% local mass) are healed; double simultaneous perturbations exceed the repair threshold, causing organism collapse. This pattern—survive unless both inputs active—matches the NAND truth table, validated across 80 trials (Fisher's exact test, p = 2.4 × 10⁻¹⁶) with robustness to position jitter (±3 pixels) and amplitude variation (±20%).
 
 **3. Signal propagation.** Local perturbations propagate through organisms with measurable temporal structure. Lagged cross-correlations between adjacent measurement points reach r = 0.84, with correlation strength decreasing with distance from the perturbation source.
 
 The NAND gate mechanism is notable for requiring no training, evolution, or engineering. Computation emerges spontaneously from the organism's homeostatic response to damage—a qualitatively novel form of emergent computation distinct from constructive logic gates (glider collisions) or reservoir computing (trained readouts).
 
-Since NAND is functionally complete, these results open a theoretical pathway toward universal computation in continuous self-organizing systems. Realizing this potential requires demonstrating gate cascading—showing that one organism's collapse can trigger perturbation of another—which remains an open challenge.
+While NAND is functionally complete in digital logic, our destructive mechanism—where the organism is consumed upon collapse—does not directly enable gate cascading. Nevertheless, these results demonstrate that self-organizing systems can perform threshold-based binary discrimination through intrinsic dynamics, suggesting a potential building block for more complex computation if cascading or non-destructive variants can be realized.
 
 Our work connects Lenia to broader research on unconventional computing, edge-of-chaos dynamics, and the computational capabilities of physical substrates. It suggests that self-repair mechanisms, ubiquitous in biological systems, may serve not only homeostatic but also computational functions.
 

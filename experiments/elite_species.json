@@ -1,233 +1,233 @@
 [
   {
-    "mu":0.141025641,
-    "sigma":0.0119230769,
-    "lyapunov":-1.7648434567,
-    "classification":"chaotic",
-    "mean_mass":22.9108509423
+    "mu": 0.141025641,
+    "sigma": 0.0119230769,
+    "lyapunov": -1.7648434567,
+    "classification": "ordered",
+    "mean_mass": 22.9108509423
   },
   {
-    "mu":0.1453846154,
-    "sigma":0.0126923077,
-    "lyapunov":-1.1022835805,
-    "classification":"chaotic",
-    "mean_mass":26.7846571633
+    "mu": 0.1453846154,
+    "sigma": 0.0126923077,
+    "lyapunov": -1.1022835805,
+    "classification": "ordered",
+    "mean_mass": 26.7846571633
   },
   {
-    "mu":0.1497435897,
-    "sigma":0.0126923077,
-    "lyapunov":-0.4751610002,
-    "classification":"chaotic",
-    "mean_mass":38.6091790887
+    "mu": 0.1497435897,
+    "sigma": 0.0126923077,
+    "lyapunov": -0.4751610002,
+    "classification": "ordered",
+    "mean_mass": 38.6091790887
   },
   {
-    "mu":0.1497435897,
-    "sigma":0.0173076923,
-    "lyapunov":0.0278956155,
-    "classification":"chaotic",
-    "mean_mass":417.6532083059
+    "mu": 0.1497435897,
+    "sigma": 0.0173076923,
+    "lyapunov": 0.0278956155,
+    "classification": "chaotic",
+    "mean_mass": 417.6532083059
   },
   {
-    "mu":0.1541025641,
-    "sigma":0.0142307692,
-    "lyapunov":-0.6862601614,
-    "classification":"chaotic",
-    "mean_mass":43.9050898699
+    "mu": 0.1541025641,
+    "sigma": 0.0142307692,
+    "lyapunov": -0.6862601614,
+    "classification": "ordered",
+    "mean_mass": 43.9050898699
   },
   {
-    "mu":0.1541025641,
-    "sigma":0.0180769231,
-    "lyapunov":0.0257631625,
-    "classification":"chaotic",
-    "mean_mass":1800.7922267109
+    "mu": 0.1541025641,
+    "sigma": 0.0180769231,
+    "lyapunov": 0.0257631625,
+    "classification": "chaotic",
+    "mean_mass": 1800.7922267109
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0157692308,
-    "lyapunov":-0.2813863909,
-    "classification":"chaotic",
-    "mean_mass":44.4673730065
+    "mu": 0.1584615385,
+    "sigma": 0.0157692308,
+    "lyapunov": -0.2813863909,
+    "classification": "ordered",
+    "mean_mass": 44.4673730065
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0211538462,
-    "lyapunov":0.0109914449,
-    "classification":"chaotic",
-    "mean_mass":117.1622945155
+    "mu": 0.1584615385,
+    "sigma": 0.0211538462,
+    "lyapunov": 0.0109914449,
+    "classification": "chaotic",
+    "mean_mass": 117.1622945155
   },
   {
-    "mu":0.1671794872,
-    "sigma":0.0234615385,
-    "lyapunov":0.0351475543,
-    "classification":"chaotic",
-    "mean_mass":3352.1283082017
+    "mu": 0.1671794872,
+    "sigma": 0.0234615385,
+    "lyapunov": 0.0351475543,
+    "classification": "chaotic",
+    "mean_mass": 3352.1283082017
   },
   {
-    "mu":0.1715384615,
-    "sigma":0.0242307692,
-    "lyapunov":0.039750831,
-    "classification":"chaotic",
-    "mean_mass":3230.7573174554
+    "mu": 0.1715384615,
+    "sigma": 0.0242307692,
+    "lyapunov": 0.039750831,
+    "classification": "chaotic",
+    "mean_mass": 3230.7573174554
   },
   {
-    "mu":0.1758974359,
-    "sigma":0.025,
-    "lyapunov":0.0387217384,
-    "classification":"chaotic",
-    "mean_mass":2230.6341049361
+    "mu": 0.1758974359,
+    "sigma": 0.025,
+    "lyapunov": 0.0387217384,
+    "classification": "chaotic",
+    "mean_mass": 2230.6341049361
   },
   {
-    "mu":0.1802564103,
-    "sigma":0.0265384615,
-    "lyapunov":0.0386709572,
-    "classification":"chaotic",
-    "mean_mass":3515.1536318143
+    "mu": 0.1802564103,
+    "sigma": 0.0265384615,
+    "lyapunov": 0.0386709572,
+    "classification": "chaotic",
+    "mean_mass": 3515.1536318143
   },
   {
-    "mu":0.1802564103,
-    "sigma":0.0257692308,
-    "lyapunov":0.0325175955,
-    "classification":"chaotic",
-    "mean_mass":2078.7475342042
+    "mu": 0.1802564103,
+    "sigma": 0.0257692308,
+    "lyapunov": 0.0325175955,
+    "classification": "chaotic",
+    "mean_mass": 2078.7475342042
   },
   {
-    "mu":0.1323076923,
-    "sigma":0.035,
-    "lyapunov":0.0147382027,
-    "classification":"stable",
-    "mean_mass":4036.6932893833
+    "mu": 0.1323076923,
+    "sigma": 0.035,
+    "lyapunov": 0.0147382027,
+    "classification": "chaotic",
+    "mean_mass": 4036.6932893833
   },
   {
-    "mu":0.141025641,
-    "sigma":0.0142307692,
-    "lyapunov":0.0056382871,
-    "classification":"stable",
-    "mean_mass":69.881838159
+    "mu": 0.141025641,
+    "sigma": 0.0142307692,
+    "lyapunov": 0.0056382871,
+    "classification": "critical",
+    "mean_mass": 69.881838159
   },
   {
-    "mu":0.141025641,
-    "sigma":0.015,
-    "lyapunov":0.0024467191,
-    "classification":"stable",
-    "mean_mass":71.3038847809
+    "mu": 0.141025641,
+    "sigma": 0.015,
+    "lyapunov": 0.0024467191,
+    "classification": "critical",
+    "mean_mass": 71.3038847809
   },
   {
-    "mu":0.1453846154,
-    "sigma":0.0134615385,
-    "lyapunov":0.007828966,
-    "classification":"stable",
-    "mean_mass":68.5007717272
+    "mu": 0.1453846154,
+    "sigma": 0.0134615385,
+    "lyapunov": 0.007828966,
+    "classification": "critical",
+    "mean_mass": 68.5007717272
   },
   {
-    "mu":0.1453846154,
-    "sigma":0.015,
-    "lyapunov":-0.0062623662,
-    "classification":"stable",
-    "mean_mass":72.647440701
+    "mu": 0.1453846154,
+    "sigma": 0.015,
+    "lyapunov": -0.0062623662,
+    "classification": "critical",
+    "mean_mass": 72.647440701
   },
   {
-    "mu":0.1453846154,
-    "sigma":0.0142307692,
-    "lyapunov":0.008694617,
-    "classification":"stable",
-    "mean_mass":69.9200557522
+    "mu": 0.1453846154,
+    "sigma": 0.0142307692,
+    "lyapunov": 0.008694617,
+    "classification": "critical",
+    "mean_mass": 69.9200557522
   },
   {
-    "mu":0.1497435897,
-    "sigma":0.0165384615,
-    "lyapunov":0.0016402288,
-    "classification":"stable",
-    "mean_mass":75.278582234
+    "mu": 0.1497435897,
+    "sigma": 0.0165384615,
+    "lyapunov": 0.0016402288,
+    "classification": "critical",
+    "mean_mass": 75.278582234
   },
   {
-    "mu":0.1497435897,
-    "sigma":0.0157692308,
-    "lyapunov":-0.007323396,
-    "classification":"stable",
-    "mean_mass":73.9085055713
+    "mu": 0.1497435897,
+    "sigma": 0.0157692308,
+    "lyapunov": -0.007323396,
+    "classification": "critical",
+    "mean_mass": 73.9085055713
   },
   {
-    "mu":0.1497435897,
-    "sigma":0.015,
-    "lyapunov":0.003962593,
-    "classification":"stable",
-    "mean_mass":71.7852645554
+    "mu": 0.1497435897,
+    "sigma": 0.015,
+    "lyapunov": 0.003962593,
+    "classification": "critical",
+    "mean_mass": 71.7852645554
   },
   {
-    "mu":0.1541025641,
-    "sigma":0.0134615385,
-    "lyapunov":-0.0047195718,
-    "classification":"stable",
-    "mean_mass":70.3256338814
+    "mu": 0.1541025641,
+    "sigma": 0.0134615385,
+    "lyapunov": -0.0047195718,
+    "classification": "critical",
+    "mean_mass": 70.3256338814
   },
   {
-    "mu":0.1541025641,
-    "sigma":0.0196153846,
-    "lyapunov":0.0073427908,
-    "classification":"stable",
-    "mean_mass":87.5622630109
+    "mu": 0.1541025641,
+    "sigma": 0.0196153846,
+    "lyapunov": 0.0073427908,
+    "classification": "critical",
+    "mean_mass": 87.5622630109
   },
   {
-    "mu":0.1541025641,
-    "sigma":0.0203846154,
-    "lyapunov":0.0088486353,
-    "classification":"stable",
-    "mean_mass":93.4817326189
+    "mu": 0.1541025641,
+    "sigma": 0.0203846154,
+    "lyapunov": 0.0088486353,
+    "classification": "critical",
+    "mean_mass": 93.4817326189
   },
   {
-    "mu":0.1541025641,
-    "sigma":0.0173076923,
-    "lyapunov":0.0046253518,
-    "classification":"stable",
-    "mean_mass":77.7881704284
+    "mu": 0.1541025641,
+    "sigma": 0.0173076923,
+    "lyapunov": 0.0046253518,
+    "classification": "critical",
+    "mean_mass": 77.7881704284
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0196153846,
-    "lyapunov":0.0118978803,
-    "classification":"stable",
-    "mean_mass":86.495703559
+    "mu": 0.1584615385,
+    "sigma": 0.0196153846,
+    "lyapunov": 0.0118978803,
+    "classification": "chaotic",
+    "mean_mass": 86.495703559
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0173076923,
-    "lyapunov":-0.0100686427,
-    "classification":"stable",
-    "mean_mass":77.1449245662
+    "mu": 0.1584615385,
+    "sigma": 0.0173076923,
+    "lyapunov": -0.0100686427,
+    "classification": "ordered",
+    "mean_mass": 77.1449245662
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0165384615,
-    "lyapunov":0.008792109,
-    "classification":"stable",
-    "mean_mass":77.0833768883
+    "mu": 0.1584615385,
+    "sigma": 0.0165384615,
+    "lyapunov": 0.008792109,
+    "classification": "critical",
+    "mean_mass": 77.0833768883
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0142307692,
-    "lyapunov":-0.0041493639,
-    "classification":"stable",
-    "mean_mass":72.6173276632
+    "mu": 0.1584615385,
+    "sigma": 0.0142307692,
+    "lyapunov": -0.0041493639,
+    "classification": "critical",
+    "mean_mass": 72.6173276632
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0188461538,
-    "lyapunov":-0.0001239505,
-    "classification":"stable",
-    "mean_mass":80.8063364372
+    "mu": 0.1584615385,
+    "sigma": 0.0188461538,
+    "lyapunov": -0.0001239505,
+    "classification": "critical",
+    "mean_mass": 80.8063364372
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0180769231,
-    "lyapunov":-0.0006312522,
-    "classification":"stable",
-    "mean_mass":77.6975648938
+    "mu": 0.1584615385,
+    "sigma": 0.0180769231,
+    "lyapunov": -0.0006312522,
+    "classification": "critical",
+    "mean_mass": 77.6975648938
   },
   {
-    "mu":0.1584615385,
-    "sigma":0.0211538462,
-    "lyapunov":0.0109914449,
-    "classification":"chaotic",
-    "mean_mass":117.1622945155
+    "mu": 0.1584615385,
+    "sigma": 0.0211538462,
+    "lyapunov": 0.0109914449,
+    "classification": "chaotic",
+    "mean_mass": 117.1622945155
   }
 ]
