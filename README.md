@@ -17,8 +17,18 @@ This repository contains a high-performance, differentiable implementation of th
 - **Scientific Validation**: Validated against null models (noise) and known causal systems.
 
 ### 3. Neuro-Lenia (Hybrid AI)
-- **Lenia as a Layer**: Implements the simulation as a learnable Recurrent Neural Network (RNN) layer using `Equinox`.
 - **Learned Physics**: Demonstrates the ability to "learn" the physical parameters ($\mu, \sigma, K$) required to stabilize arbitrary patterns or solve memory tasks via Backpropagation Through Time (BPTT).
+
+### 4. Locomotion & Evolution (Auto-Lenia)
+- **Virtual Soft Robotics**: Evolved creatures that achieve consistent locomotion (0.34 displacement/step) via self-organized undulation.
+- **Open-Ended Evolution**: Genetic Algorithm (GA) that co-evolves body morphology and physics parameters for survival and movement.
+
+### 5. Computational Universality
+- **Logic Gates**: Discovered a stable "Soft-NAND" regime at $\mu \approx 0.8$.
+- **Memory**: Constructed a functional **RS-Trigger (Flip-Flop)** capable of storing 1 bit of information via perturbation-induced bistability.
+
+### 6. Sensory-Motor Agents
+- **Chemotaxis**: Implemented reactive agents that sense "chemical" gradients and navigate towards food sources ($\alpha=0.2$ sensory coupling).
 
 ## Installation
 
