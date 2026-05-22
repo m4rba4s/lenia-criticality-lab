@@ -1,6 +1,6 @@
 # Lenia Criticality Lab
 
-JAX/NumPy research lab for Lenia criticality, self-organization, null models, and reservoir-style computation.
+JAX/NumPy research lab for Lenia criticality, information-flow metrics, null models, differentiable control, and NAND-like destructive threshold dynamics.
 
 The project contains two related simulation paths:
 

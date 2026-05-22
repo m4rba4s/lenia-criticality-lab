@@ -5,7 +5,7 @@ Use Lenia as a computational substrate for machine learning.
 The complex nonlinear dynamics of Lenia transform inputs,
 and we train only a simple linear readout.
 
-Experimental Lenia reservoir-computing substrate testing nonlinear state expansion.
+Note: The current transform resets the base state per sample, operating as a nonlinear spatial feature map over sliding windows rather than a continuous temporal memory reservoir.
 """
 
 from dataclasses import dataclass
@@ -248,26 +248,34 @@ def test_narma10():
     n_samples = 400
     u, y = generate_narma10(n_samples)
     
-    # We use a sliding window of input to feed into the reservoir
-    # Since Lenia state is spatial, we can map recent history to space
-    window_size = 5
-    X = np.zeros((n_samples - window_size, window_size))
-    for i in range(len(X)):
-        X[i] = u[i:i+window_size]
-        
-    y_target = y[window_size:]
+    # In a true reservoir, we feed the sequence directly
+    # and the reservoir state retains the memory.
+    X = u.reshape(-1, 1)
+    
+    # We must skip the first 10 steps for evaluation since NARMA-10 needs 10 steps of history
+    # to be fully defined by the sequence.
+    valid_idx = 10
     
     # Split train/test
     split = 200
     X_train, X_test = X[:split], X[split:]
-    y_train, y_test = y_target[:split], y_target[split:]
+    y_train, y_test = y[:split], y[split:]
+    
+    # For baseline, we'll use a sliding window of 10 for the linear model to be fair
+    # (since linear model has no memory of its own)
+    X_baseline = np.zeros((n_samples - 10, 10))
+    for i in range(len(X_baseline)):
+        X_baseline[i] = u[i:i+10]
+    
+    X_base_train, X_base_test = X_baseline[:split-10], X_baseline[split-10:]
+    y_base_train, y_base_test = y[10:split], y[split:]
 
     # Baseline: Linear regression on recent history
-    print("1. Baseline (Linear on recent inputs):")
+    print("1. Baseline (Linear on 10-step window):")
     baseline = Ridge(alpha=1.0)
-    baseline.fit(X_train, y_train)
-    baseline_mse = np.mean((y_test - baseline.predict(X_test))**2)
-    baseline_nmse = baseline_mse / np.var(y_test)
+    baseline.fit(X_base_train, y_base_train)
+    baseline_mse = np.mean((y_base_test - baseline.predict(X_base_test))**2)
+    baseline_nmse = baseline_mse / np.var(y_base_test)
     print(f"   Test NMSE: {baseline_nmse:.4f}\n")
 
     # Reservoir
@@ -279,9 +287,18 @@ def test_narma10():
         input_region_size=8,
     )
     reservoir = LeniaReservoir(config)
-    reservoir.fit(X_train, y_train, task='regression')
     
-    predictions = reservoir.predict(X_test)
+    # We fit on the full sequence, but evaluate only on valid indices
+    print(f"Transforming {len(X_train)} samples through Lenia reservoir...")
+    res_states_train = reservoir.transform(X_train)
+    res_states_test = reservoir.transform(X_test)
+    
+    print("Fitting readout layer...")
+    reservoir.readout_model = Ridge(alpha=1.0)
+    # Fit only on states where NARMA-10 is well-defined
+    reservoir.readout_model.fit(res_states_train[valid_idx:], y_train[valid_idx:])
+    
+    predictions = reservoir.readout_model.predict(res_states_test)
     test_mse = np.mean((y_test - predictions)**2)
     test_nmse = test_mse / np.var(y_test)
     print(f"\nTest NMSE: {test_nmse:.4f}")
