@@ -1,11 +1,7 @@
-"""
-Lenia Reservoir Computing
+"""Experimental Lenia reservoir-computing substrate.
 
-Use Lenia as a computational substrate for machine learning.
-The complex nonlinear dynamics of Lenia transform inputs,
-and we train only a simple linear readout.
-
-Note: The current transform resets the base state per sample, operating as a nonlinear spatial feature map over sliding windows rather than a continuous temporal memory reservoir.
+This module tests whether Lenia dynamics provide useful nonlinear
+state expansion for readout-based learning.
 """
 
 from dataclasses import dataclass
