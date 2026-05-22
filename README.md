@@ -62,6 +62,18 @@ Run the full test suite:
 .venv/bin/python -m pytest tests/
 ```
 
+Run the JAX-accelerated null models (Equal Mass, Random Damage, Temporal Shuffling) to verify baseline claims:
+
+```bash
+.venv/bin/python scripts/verify_null_models_jax.py
+```
+
+Run the Lenia Reservoir Computing benchmark (now upgraded to NARMA-10 for strict temporal memory evaluation):
+
+```bash
+.venv/bin/python -m src.reservoir
+```
+
 Current expected result in this workspace:
 
 ```text
@@ -142,6 +154,7 @@ The toroidal boundary condition is intentional: it makes every cell topologicall
 ## Known Limits
 
 - The biological interpretation is qualitative. Treat results as artificial life / dynamical systems experiments unless independently validated against a specific biological mechanism.
+- The "NAND-like" behavior is a destructive threshold response: the organism is consumed upon collapse, precluding direct gate reuse or cascading without a restoration mechanism.
 - Long parameter sweeps can be expensive because Lyapunov and correlation metrics require many simulation steps.
 - GPU acceleration depends on a correctly installed JAX accelerator build.
 - Some demo claims are exploratory and should be backed by fresh experiment output before publication.

@@ -18,20 +18,22 @@ Usage:
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent))
 
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-import matplotlib.gridspec as gridspec
-from dataclasses import dataclass
-from typing import List, Tuple, Optional
-from scipy.stats import fisher_exact, chi2_contingency
-import json
-from datetime import datetime
 import argparse
+import json
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Tuple
 
-from src.simulation import LeniaSimulation, LeniaConfig
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.animation import FuncAnimation
+from scipy.stats import fisher_exact
+
+from src.simulation import LeniaConfig, LeniaSimulation
 
 
 @dataclass

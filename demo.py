@@ -12,16 +12,15 @@ Usage:
     python demo.py species      # Elite species viewer
 """
 
-import sys
 import subprocess
+import sys
 from pathlib import Path
-
 
 DEMOS = {
     'nand': {
         'script': 'demo_nand_gate.py',
         'title': 'NAND Gate Demonstration',
-        'desc': 'Emergent NAND-like computation via self-repair threshold',
+        'desc': 'NAND-like threshold response via self-repair threshold',
         'icon': '🔌',
     },
     'phase': {

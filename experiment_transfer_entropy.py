@@ -11,17 +11,19 @@ Usage:
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent))
 
-import numpy as np
 import json
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from dataclasses import dataclass, asdict
-from typing import List, Dict, Tuple
+from typing import Dict, List
+
+import numpy as np
 from tqdm import tqdm
 
-from src.simulation import LeniaSimulation, LeniaConfig
 from src.metrics import TransferEntropyEstimator, compute_transfer_entropy_matrix
+from src.simulation import LeniaConfig, LeniaSimulation
 
 
 @dataclass
@@ -191,7 +193,7 @@ def run_experiment(config: TEExperimentConfig) -> Dict:
     print("\n" + "="*60)
     print("TRANSFER ENTROPY ANALYSIS")
     print("="*60)
-    print(f"\nParameters:")
+    print("\nParameters:")
     print(f"  Organism: mu={config.mu}, sigma={config.sigma}")
     print(f"  Trials: {config.n_trials}")
     print(f"  Probes: {config.n_probes}")

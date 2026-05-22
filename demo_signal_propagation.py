@@ -11,18 +11,18 @@ Usage:
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent))
 
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-from matplotlib.widgets import Button
 import matplotlib.gridspec as gridspec
-from matplotlib.patches import Circle, Rectangle
-from scipy.ndimage import gaussian_filter
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.animation import FuncAnimation
+from matplotlib.patches import Circle
+from matplotlib.widgets import Button
 
-from src.simulation import LeniaSimulation, LeniaConfig
 from src.metrics import TransferEntropyEstimator
+from src.simulation import LeniaConfig, LeniaSimulation
 
 
 class SignalPropagationDemo:
@@ -373,7 +373,7 @@ class SignalPropagationDemo:
         info_lines = [
             ('SIGNAL PROPAGATION', 12, '#58a6ff'),
             ('', 8, 'white'),
-            (f'Adjacent probe correlation:', 9, '#8b949e'),
+            ('Adjacent probe correlation:', 9, '#8b949e'),
             (f'r(P1,P2) = {p1_p2_corr:.3f}', 11, '#3fb950' if p1_p2_corr > 0.5 else '#f0883e'),
             ('', 8, 'white'),
             ('Key finding:', 9, '#8b949e'),

@@ -1,4 +1,4 @@
-# Emergent NAND Computation and Signal Propagation in Lenia Near Criticality
+# NAND-Like Threshold Response and Signal Propagation in Lenia Near Criticality
 
 ## Abstract (v3.1 — Hardened)
 

@@ -12,19 +12,18 @@ Usage:
     python view_elite.py --critical         # View only critical species
 """
 
-import sys
-import json
 import argparse
+import json
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, Slider
 
-from src.simulation import LeniaSimulation, LeniaConfig
+from src.simulation import LeniaConfig, LeniaSimulation
 
 
 class EliteViewer:

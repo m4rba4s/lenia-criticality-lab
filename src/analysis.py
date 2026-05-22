@@ -4,14 +4,14 @@ Analysis and Visualization
 Publication-quality figures and statistical analysis for criticality detection.
 """
 
+from typing import Optional, Tuple
+
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 from matplotlib.patches import Patch
 from scipy.ndimage import gaussian_filter
-from typing import Optional, Tuple, List
-from pathlib import Path
 
 
 # Style configuration for publication

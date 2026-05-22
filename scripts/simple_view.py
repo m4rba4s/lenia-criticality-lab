@@ -4,13 +4,15 @@ Simple Elite Viewer - guaranteed to work
 """
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import json
-import numpy as np
+
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from src.simulation import LeniaSimulation, LeniaConfig
+
+from src.simulation import LeniaConfig, LeniaSimulation
 
 # Load elite
 elite_path = Path(__file__).parent.parent / 'experiments' / 'elite_species.json'

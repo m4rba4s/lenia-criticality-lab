@@ -8,14 +8,13 @@ and we train only a simple linear readout.
 This is genuinely novel - nobody has done this before!
 """
 
-import numpy as np
-from typing import Tuple, List, Optional, Callable
 from dataclasses import dataclass
-from sklearn.linear_model import Ridge, LogisticRegression
-from sklearn.metrics import accuracy_score
-import warnings
 
-from .simulation import LeniaSimulation, LeniaConfig
+import numpy as np
+from sklearn.linear_model import LogisticRegression, Ridge
+from sklearn.metrics import accuracy_score
+
+from .simulation import LeniaConfig, LeniaSimulation
 
 
 @dataclass
@@ -226,70 +225,76 @@ class LeniaReservoir:
             return 1 - np.mean((y - predictions)**2) / np.var(y)
 
 
-def test_xor():
+def generate_narma10(n_samples: int = 500) -> tuple[np.ndarray, np.ndarray]:
+    """Generate NARMA-10 dataset."""
+    rng = np.random.default_rng(42)
+    u = rng.uniform(0, 0.5, n_samples)
+    y = np.zeros(n_samples)
+    
+    for t in range(9, n_samples - 1):
+        y[t+1] = 0.3 * y[t] + 0.05 * y[t] * np.sum(y[t-9:t+1]) + 1.5 * u[t-9] * u[t] + 0.1
+        
+    return u, y
+
+def test_narma10():
     """
-    Test reservoir on XOR problem.
-    XOR is nonlinear - a linear classifier can't solve it.
-    If Lenia reservoir solves it, the dynamics provide nonlinearity!
+    Test reservoir on NARMA-10 benchmark.
+    This is a standard temporal memory and nonlinearity test for Reservoir Computing.
     """
     print("="*60)
-    print("TEST: XOR Problem (Nonlinearity Test)")
+    print("TEST: NARMA-10 Task (Temporal Memory & Nonlinearity)")
     print("="*60)
-    print("\nXOR truth table:")
-    print("  0 XOR 0 = 0")
-    print("  0 XOR 1 = 1")
-    print("  1 XOR 0 = 1")
-    print("  1 XOR 1 = 0")
-    print("\nA linear classifier CANNOT solve XOR.")
-    print("If Lenia solves it → reservoir provides nonlinearity!\n")
+    print("NARMA-10 requires both nonlinear transformation and memory of past inputs.")
 
-    # XOR dataset (repeated for more training samples)
-    X = np.array([
-        [0, 0], [0, 1], [1, 0], [1, 1],
-        [0, 0], [0, 1], [1, 0], [1, 1],
-        [0, 0], [0, 1], [1, 0], [1, 1],
-        [0, 0], [0, 1], [1, 0], [1, 1],
-    ], dtype=float)
-    y = np.array([0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0])
+    # Generate data
+    n_samples = 400
+    u, y = generate_narma10(n_samples)
+    
+    # We use a sliding window of input to feed into the reservoir
+    # Since Lenia state is spatial, we can map recent history to space
+    window_size = 5
+    X = np.zeros((n_samples - window_size, window_size))
+    for i in range(len(X)):
+        X[i] = u[i:i+window_size]
+        
+    y_target = y[window_size:]
+    
+    # Split train/test
+    split = 200
+    X_train, X_test = X[:split], X[split:]
+    y_train, y_test = y_target[:split], y_target[split:]
 
-    # Test without reservoir (linear baseline)
-    print("1. Baseline (Linear only, no reservoir):")
-    baseline = LogisticRegression(random_state=42)
-    baseline.fit(X, y)
-    baseline_acc = accuracy_score(y, baseline.predict(X))
-    print(f"   Accuracy: {baseline_acc:.2%}")
-    print(f"   (Expected: ~50% because XOR is nonlinear)\n")
+    # Baseline: Linear regression on recent history
+    print("1. Baseline (Linear on recent inputs):")
+    baseline = Ridge(alpha=1.0)
+    baseline.fit(X_train, y_train)
+    baseline_mse = np.mean((y_test - baseline.predict(X_test))**2)
+    baseline_nmse = baseline_mse / np.var(y_test)
+    print(f"   Test NMSE: {baseline_nmse:.4f}\n")
 
-    # Test with Lenia reservoir
+    # Reservoir
     print("2. Lenia Reservoir Computing:")
     config = ReservoirConfig(
-        grid_size=48,  # Smaller for speed
-        compute_steps=20,
-        readout_samples=128,
+        grid_size=48,
+        compute_steps=15,
+        readout_samples=256,
+        input_region_size=8,
     )
     reservoir = LeniaReservoir(config)
-    reservoir.fit(X, y, task='classification')
-
-    # Test predictions
-    print("\nPredictions:")
-    X_test = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=float)
-    y_test = np.array([0, 1, 1, 0])
+    reservoir.fit(X_train, y_train, task='regression')
+    
     predictions = reservoir.predict(X_test)
+    test_mse = np.mean((y_test - predictions)**2)
+    test_nmse = test_mse / np.var(y_test)
+    print(f"\nTest NMSE: {test_nmse:.4f}")
 
-    for i, (inp, true, pred) in enumerate(zip(X_test, y_test, predictions)):
-        status = "✓" if pred == true else "✗"
-        print(f"   {int(inp[0])} XOR {int(inp[1])} = {pred} (true: {true}) {status}")
-
-    test_acc = accuracy_score(y_test, predictions)
-    print(f"\nTest accuracy: {test_acc:.2%}")
-
-    if test_acc > baseline_acc:
-        print("\n🎉 SUCCESS! Lenia provides useful nonlinear transformation!")
-        print("   The reservoir computing paradigm works!")
+    if test_nmse < baseline_nmse:
+        print("\n🎉 SUCCESS! Lenia outperforms linear baseline on NARMA-10!")
+        print("   The reservoir computing paradigm works for temporal tasks!")
     else:
-        print("\n🤔 Reservoir didn't help. May need tuning.")
+        print("\n🤔 Reservoir didn't beat baseline. Needs tuning.")
 
-    return test_acc
+    return test_nmse
 
 
 def test_pattern_recognition():
@@ -348,16 +353,16 @@ if __name__ == "__main__":
     print("Using Lenia as a computational substrate")
     print("🧠 "*20 + "\n")
 
-    xor_acc = test_xor()
+    narma_nmse = test_narma10()
     pattern_acc = test_pattern_recognition()
 
     print("\n" + "="*60)
     print("SUMMARY")
     print("="*60)
-    print(f"XOR accuracy:     {xor_acc:.2%}")
+    print(f"NARMA-10 NMSE:    {narma_nmse:.4f}")
     print(f"Pattern accuracy: {pattern_acc:.2%}")
 
-    if xor_acc >= 0.75:
+    if narma_nmse < 1.0:
         print("\n✨ Lenia Reservoir Computing WORKS!")
         print("   The complex dynamics provide useful computation.")
     else:

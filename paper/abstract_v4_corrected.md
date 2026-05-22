@@ -1,4 +1,4 @@
-# Emergent NAND Computation in Lenia Near Criticality
+# NAND-Like Threshold Response in Lenia Near Criticality
 
 ## Abstract (v4.0 — Corrected after experimental validation)
 

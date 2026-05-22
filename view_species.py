@@ -10,13 +10,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.widgets import Button
-from scipy.signal import fftconvolve
 
-from src.simulation import LeniaSimulation, LeniaConfig
+from src.simulation import LeniaConfig, LeniaSimulation
 
 
 def calibrate_init(mu, sigma, grid_size=150):

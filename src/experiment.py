@@ -8,21 +8,25 @@ Reproducible, structured experiment execution with:
 - Parallel execution support
 """
 
+import json
+import warnings
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from dataclasses import dataclass, field, asdict
-from typing import List, Dict, Optional, Any, Callable
-from datetime import datetime
-import json
-import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from tqdm import tqdm
-import warnings
 
-from .simulation import LeniaSimulation, LeniaConfig
-from .metrics import (LyapunovEstimator, SpatialAnalyzer, InformationMetrics,
-                      SusceptibilityMeasure, LyapunovResult, CorrelationResult)
+from .metrics import (
+    InformationMetrics,
+    LyapunovEstimator,
+    SpatialAnalyzer,
+    SusceptibilityMeasure,
+)
+from .simulation import LeniaConfig, LeniaSimulation
 
 
 @dataclass
@@ -333,7 +337,7 @@ class Experiment:
         with open(self.output_path / "summary.json", "w") as f:
             json.dump(summary, f, indent=2)
 
-        print(f"\nExperiment complete!")
+        print("\nExperiment complete!")
         print(f"  Duration: {duration:.1f}s")
         print(f"  Results saved to: {self.output_path}")
 

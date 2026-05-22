@@ -11,19 +11,18 @@ Usage:
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent))
 
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-from matplotlib.widgets import Button, Slider
-from matplotlib.patches import Circle
-import matplotlib.gridspec as gridspec
-from matplotlib.colors import LinearSegmentedColormap
-import json
 
-from src.simulation import LeniaSimulation, LeniaConfig
-from src.metrics import LyapunovEstimator
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.animation import FuncAnimation
+from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.widgets import Button
+
+from src.simulation import LeniaConfig, LeniaSimulation
 
 
 class PhaseExplorer:

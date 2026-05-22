@@ -4,7 +4,7 @@ To our knowledge, we have presented the first systematic investigation of intrin
 
 **1. Critical regime identification.** Scanning 1,600 parameter configurations, we identified a critical regime (~11% of explored space) where Lyapunov exponents approach zero (mean λ = +0.003, SD = 0.015). This regime coincides with stable, motile organisms, supporting the edge-of-chaos hypothesis for computation in self-organizing systems.
 
-**2. Emergent NAND-like threshold behavior.** We discovered that Lenia organisms implement NAND-like computation through self-repair dynamics. Single perturbations (removing ~15% local mass) are healed; double simultaneous perturbations exceed the repair threshold, causing organism collapse. This pattern—survive unless both inputs active—matches the NAND truth table, validated across 80 trials (Fisher's exact test, p = 2.4 × 10⁻¹⁶) with robustness to position jitter (±3 pixels) and amplitude variation (±20%).
+**2. Emergent NAND-like threshold behavior.** We discovered that Lenia organisms implement a NAND-like threshold response through self-repair dynamics. Single perturbations (removing ~15% local mass) are healed; double simultaneous perturbations exceed the repair threshold, causing organism collapse. This pattern—survive unless both inputs active—matches the NAND truth table, validated across 80 trials (Fisher's exact test, p = 2.4 × 10⁻¹⁶) with robustness to position jitter (±3 pixels) and amplitude variation (±20%).
 
 **3. Signal propagation.** Local perturbations propagate through organisms with measurable temporal structure. Lagged cross-correlations between adjacent measurement points reach r = 0.84, with correlation strength decreasing with distance from the perturbation source.
 

@@ -2,7 +2,7 @@
 """
 NAND Gate Demonstration in Lenia
 
-Interactive visualization of emergent NAND-like computation through
+Interactive visualization of NAND-like threshold response through
 self-repair threshold dynamics in continuous cellular automata.
 
 This demo shows the key finding of our research:
@@ -472,4 +472,6 @@ def main():
 
 
 if __name__ == '__main__':
+    main()
+me__ == '__main__':
     main()

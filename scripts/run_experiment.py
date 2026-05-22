@@ -15,8 +15,12 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.experiment import ExperimentRunner, ExperimentConfig, Experiment
-from src.analysis import setup_publication_style, plot_criticality_signatures, summarize_results
+from src.analysis import (
+    plot_criticality_signatures,
+    setup_publication_style,
+    summarize_results,
+)
+from src.experiment import ExperimentRunner
 
 
 def main():

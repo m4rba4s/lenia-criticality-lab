@@ -2,7 +2,7 @@
 
 ## 4.1 Computation via Self-Repair
 
-Our central finding—that Lenia organisms implement NAND-like computation through self-repair thresholds—represents a qualitatively novel mechanism for emergent computation. Unlike previous demonstrations of computation in cellular automata, which rely on:
+Our central finding—that Lenia organisms exhibit a NAND-like threshold response through self-repair thresholds—represents a qualitatively novel mechanism for emergent dynamics. Unlike previous demonstrations of computation in cellular automata, which rely on:
 
 - **Constructive logic** (Conway's Life): Glider collisions engineered to produce specific outputs [3]
 - **Reservoir computing**: Dynamical systems with trained linear readouts [9]

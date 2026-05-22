@@ -13,18 +13,19 @@ Usage:
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent))
 
-import numpy as np
 import json
-from datetime import datetime
 from dataclasses import dataclass
-from typing import List, Dict, Tuple
+from datetime import datetime
+from typing import Dict, Tuple
+
+import numpy as np
 from scipy.stats import fisher_exact
 from tqdm import tqdm
 
-from src.simulation import LeniaSimulation, LeniaConfig
-
+from src.simulation import LeniaConfig, LeniaSimulation
 
 # Critical configurations from phase diagram analysis
 # Selected to span the critical regime (|λ| < 0.01)
@@ -296,7 +297,7 @@ def run_morphology_experiment(n_trials: int = 20) -> Dict:
     avg_critical_gap = np.mean([r.nand_gap for r in critical_results]) if critical_results else 0
     avg_ordered_gap = np.mean([r.nand_gap for r in ordered_results]) if ordered_results else 0
 
-    print(f"\n1. GENERALIZATION ACROSS CRITICAL REGIME:")
+    print("\n1. GENERALIZATION ACROSS CRITICAL REGIME:")
     print(f"   {n_critical_nand}/{len(critical_results)} configurations show NAND behavior")
     print(f"   Average gap: {avg_critical_gap:.0%}")
 
@@ -305,7 +306,7 @@ def run_morphology_experiment(n_trials: int = 20) -> Dict:
     else:
         print("   >>> NAND behavior may be configuration-specific")
 
-    print(f"\n2. CRITICALITY REQUIREMENT:")
+    print("\n2. CRITICALITY REQUIREMENT:")
     if n_ordered_nand == 0 and n_critical_nand > 0:
         print("   >>> Ordered regime does NOT show NAND behavior")
         print("   >>> Criticality appears NECESSARY for NAND mechanism")

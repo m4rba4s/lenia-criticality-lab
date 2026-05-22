@@ -8,15 +8,15 @@ Implements measures to detect edge-of-chaos dynamics:
 - Susceptibility (response to perturbations)
 """
 
+import warnings
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
-from scipy.ndimage import uniform_filter
 from scipy.optimize import curve_fit
 from scipy.stats import entropy as scipy_entropy
-from typing import Tuple, List, Optional, Dict
-from dataclasses import dataclass
-import warnings
 
-from .simulation import LeniaSimulation, LeniaConfig, create_perturbation_pair
+from .simulation import LeniaConfig, LeniaSimulation, create_perturbation_pair
 
 
 @dataclass

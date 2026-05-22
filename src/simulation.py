@@ -7,12 +7,13 @@ Headless, research-focused implementation optimized for:
 - Analysis (clean state access, perturbation support)
 """
 
+import hashlib
+import json
+from dataclasses import asdict, dataclass
+from typing import Any, Callable, Dict, Optional, Tuple
+
 import numpy as np
 from scipy.ndimage import gaussian_filter
-from dataclasses import dataclass, field, asdict
-from typing import Optional, Tuple, Callable, Dict, Any
-import json
-import hashlib
 
 
 @dataclass

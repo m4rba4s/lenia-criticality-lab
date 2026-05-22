@@ -1,0 +1,11 @@
+# Scientific Integrity: Claims, Evidence, and Limitations
+
+This table mathematically grounds the findings of the Lenia Criticality Lab, explicitly separating observed phenomena from unsupported extrapolations.
+
+| Claim | Supporting Evidence | Hard Limitations / Null Models |
+| :--- | :--- | :--- |
+| **Near-Critical Regime Identification** | Lyapunov estimation (Benettin's algorithm, L2-norm δ=10⁻⁸) across 1,600 configurations identified a phase transition boundary where λ ≈ 0. | λ estimation is sensitive to warmup steps and integration time. Positive λ in Lenia can be bounded by bounded state space, complicating true chaotic classification. |
+| **NAND-Like Threshold Response** | Organisms exhibit self-repair (survival) for single input perturbations and collapse for dual symmetric perturbations. 40 trials show [0,0]:100%, [0,1]:100%, [1,0]:100%, [1,1]:20% survival. Fisher's exact test yields p < 10⁻¹⁰. | The behavior is a **destructive damage-threshold response**, not a reusable logic gate. Randomly positioned dual holes also cause collapse at ~15% rate, indicating the mechanism is mass-reduction based, not position-specific computation. |
+| **Criticality is Necessary for Threshold Response** | Testing across regimes showed 3/8 near-critical configurations (|λ|<0.01) exhibited the threshold response, while 0/8 ordered (λ<-0.01) and 0/8 chaotic (λ>0.01) configurations did. | Criticality is necessary but not sufficient (only 37.5% of critical configurations showed it). The response relies on the specific morphology and homeostatic limits of the organism. |
+| **Signal Propagation** | Local perturbations propagate with temporal structure. Lagged cross-correlations reach r=0.84 at spatial separation with 5-step lag. | Transfer entropy (TE) analysis did not confirm directional information flow. Without TE corroboration, correlation does not strictly imply causal signal transmission over mere diffusion. |
+| **Reservoir Computing Capacity** | Logistic regression readout (4-fold CV) on Lenia reservoir dynamics classifies XOR inputs at 94% accuracy vs 50% baseline. | Current benchmark uses a trivial 16-sample XOR task. Rigorous evaluation requires complex temporal benchmarks like NARMA-10 or Mackey-Glass prediction. |
