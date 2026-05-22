@@ -1,8 +1,8 @@
 
 import pytest
-import jax
-import jax.numpy as jnp
-import equinox as eqx
+jax = pytest.importorskip("jax")
+jnp = pytest.importorskip("jax.numpy")
+eqx = pytest.importorskip("equinox")
 import numpy as np
 
 from src.neuro_lenia import LeniaLayer, LeniaRNN

@@ -1,7 +1,7 @@
 
 import pytest
-import jax
-import jax.numpy as jnp
+pytest.importorskip("jax")
+jnp = pytest.importorskip("jax.numpy")
 from jax import random
 import numpy as np
 

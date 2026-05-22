@@ -8,7 +8,6 @@ Headless, research-focused implementation optimized for:
 """
 
 import numpy as np
-from scipy.signal import fftconvolve
 from scipy.ndimage import gaussian_filter
 from dataclasses import dataclass, field, asdict
 from typing import Optional, Tuple, Callable, Dict, Any
@@ -78,21 +77,43 @@ class LeniaSimulation:
 
     def __init__(self, config: LeniaConfig):
         self.config = config
+        self._validate_config()
         self.rng = np.random.default_rng(config.seed)
 
         # State
         self.world = np.zeros((config.grid_size, config.grid_size), dtype=np.float64)
+        self._next_world = np.empty_like(self.world)
         self.t = 0  # Simulation time
         self.step_count = 0
 
         # Precompute kernel
         self.kernel = self._make_kernel()
+        self.kernel_fft = self._make_kernel_fft(self.kernel)
 
         # Growth function
         self.growth_func = self._get_growth_function()
 
         # Initialize
         self._initialize()
+
+    def _validate_config(self) -> None:
+        """Validate parameters that would otherwise create ill-defined dynamics."""
+        cfg = self.config
+
+        if cfg.grid_size <= 0:
+            raise ValueError("grid_size must be positive")
+        if cfg.kernel_radius <= 0:
+            raise ValueError("kernel_radius must be positive")
+        if 2 * cfg.kernel_radius + 1 > cfg.grid_size:
+            raise ValueError("kernel diameter must not exceed grid_size")
+        if cfg.kernel_width <= 0:
+            raise ValueError("kernel_width must be positive")
+        if cfg.sigma <= 0:
+            raise ValueError("sigma must be positive")
+        if cfg.dt <= 0:
+            raise ValueError("dt must be positive")
+        if cfg.init_size <= 0:
+            raise ValueError("init_size must be positive")
 
     def _make_kernel(self) -> np.ndarray:
         """Build convolution kernel."""
@@ -117,8 +138,34 @@ class LeniaSimulation:
             raise ValueError(f"Unknown kernel type: {self.config.kernel_type}")
 
         # Normalize
-        kernel = kernel / kernel.sum()
+        kernel_sum = kernel.sum()
+        if not np.isfinite(kernel_sum) or kernel_sum <= 0:
+            raise ValueError("kernel has zero or invalid mass")
+
+        kernel = kernel / kernel_sum
         return kernel
+
+    def _make_kernel_fft(self, kernel: np.ndarray) -> np.ndarray:
+        """
+        Embed the local kernel for circular convolution and precompute its FFT.
+
+        Lenia is normally simulated on a torus. Placing the kernel center at the
+        FFT origin makes the NumPy reference engine match the JAX engine and
+        avoids zero-padded edge physics.
+        """
+        r = self.config.kernel_radius
+        size = self.config.grid_size
+        kernel_padded = np.zeros((size, size), dtype=np.float64)
+        kh, kw = kernel.shape
+        kernel_padded[:kh, :kw] = kernel
+        kernel_shifted = np.roll(kernel_padded, shift=(-r, -r), axis=(0, 1))
+        return np.fft.rfft2(kernel_shifted)
+
+    def _convolve_periodic(self, state: np.ndarray) -> np.ndarray:
+        """Return toroidal convolution of state with the precomputed kernel."""
+        state_fft = np.fft.rfft2(state)
+        state_fft *= self.kernel_fft
+        return np.fft.irfft2(state_fft, s=state.shape)
 
     def _get_growth_function(self) -> Callable:
         """Return growth function."""
@@ -192,14 +239,18 @@ class LeniaSimulation:
         Advance simulation by one time step.
         Returns the growth field for analysis.
         """
-        # Convolution: neighbor potential
-        potential = fftconvolve(self.world, self.kernel, mode='same')
+        # Convolution: toroidal neighbor potential.
+        potential = self._convolve_periodic(self.world)
 
         # Growth
         growth = self.growth_func(potential, self.config.mu, self.config.sigma)
 
-        # Update
-        self.world = np.clip(self.world + self.config.dt * growth, 0.0, 1.0)
+        # Synchronous double-buffered update. The old world is read-only for
+        # this step; the scratch buffer becomes the next state after clipping.
+        np.multiply(growth, self.config.dt, out=self._next_world)
+        np.add(self.world, self._next_world, out=self._next_world)
+        np.clip(self._next_world, 0.0, 1.0, out=self._next_world)
+        self.world, self._next_world = self._next_world, self.world
 
         self.t += self.config.dt
         self.step_count += 1
@@ -218,7 +269,8 @@ class LeniaSimulation:
     def set_state(self, state: np.ndarray) -> None:
         """Set state (for perturbation experiments)."""
         assert state.shape == self.world.shape
-        self.world = state.copy()
+        self.world = np.asarray(state, dtype=np.float64).copy()
+        self._next_world = np.empty_like(self.world)
 
     def perturb(self, epsilon: float = 1e-8) -> np.ndarray:
         """

@@ -1,6 +1,6 @@
 
 import pytest
-import jax.numpy as jnp
+jnp = pytest.importorskip("jax.numpy")
 from jax import random
 import numpy as np
 

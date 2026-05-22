@@ -296,32 +296,36 @@ def summarize_results(df: pd.DataFrame) -> dict:
     """Generate summary statistics from experiment results."""
     summary = {
         'total_points': len(df),
-        'phase_counts': df['classification'].value_counts().to_dict(),
+        'phase_counts': {
+            key: int(value)
+            for key, value in df['classification'].value_counts().to_dict().items()
+        },
     }
 
     if 'lyapunov' in df.columns:
-        lyap = df['lyapunov'].dropna()
+        lyap = pd.to_numeric(df['lyapunov'], errors='coerce').dropna()
         summary['lyapunov'] = {
-            'mean': lyap.mean(),
-            'std': lyap.std(),
-            'min': lyap.min(),
-            'max': lyap.max(),
-            'n_critical': ((lyap > -0.01) & (lyap < 0.01)).sum(),
+            'mean': lyap.mean() if len(lyap) > 0 else None,
+            'std': lyap.std() if len(lyap) > 0 else None,
+            'min': lyap.min() if len(lyap) > 0 else None,
+            'max': lyap.max() if len(lyap) > 0 else None,
+            'n_critical': int(((lyap > -0.01) & (lyap < 0.01)).sum()),
         }
 
     if 'correlation_length' in df.columns:
-        xi = df['correlation_length'].dropna()
+        xi = pd.to_numeric(df['correlation_length'], errors='coerce').dropna()
         xi_finite = xi[np.isfinite(xi)]
         summary['correlation'] = {
             'mean_length': xi_finite.mean() if len(xi_finite) > 0 else None,
-            'n_power_law': (df['correlation_type'] == 'power_law').sum(),
-            'n_exponential': (df['correlation_type'] == 'exponential').sum(),
+            'n_power_law': int((df['correlation_type'] == 'power_law').sum()),
+            'n_exponential': int((df['correlation_type'] == 'exponential').sum()),
         }
 
     if 'entropy' in df.columns:
+        entropy = pd.to_numeric(df['entropy'], errors='coerce').dropna()
         summary['entropy'] = {
-            'mean': df['entropy'].mean(),
-            'std': df['entropy'].std(),
+            'mean': entropy.mean() if len(entropy) > 0 else None,
+            'std': entropy.std() if len(entropy) > 0 else None,
         }
 
     return summary

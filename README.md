@@ -1,98 +1,159 @@
 # Lenia Criticality Lab
 
-**A Research Framework for Differentiable Self-Organizing Systems**
+Research code for studying critical dynamics, information flow, and differentiable control in Lenia-style continuous cellular automata.
 
-This repository contains a high-performance, differentiable implementation of the Lenia continuous cellular automaton using JAX. It is designed to investigate the computational capabilities of self-organizing systems, specifically focusing on criticality, information flow, and hybrid neuro-evolutionary architectures.
+The project contains two related simulation paths:
 
-## Key Features
+- a NumPy/SciPy reference engine in `src/simulation.py` for reproducible experiments and analysis;
+- a JAX engine in `src/engine_jax.py` for batched, differentiable, accelerator-friendly execution.
 
-### 1. JAX-Accelerated Physics Engine
-- **125x Performance Improvement**: Replaces legacy Scipy convolution with JAX's `fftconvolve` and XLA compilation.
-- **Parallelization**: Supports `vmap` for simulating thousands of environments simultaneously on a single GPU.
-- **Differentiability**: Fully differentiable physics pipeline allowing for gradient-based optimization of life parameters.
+This is a computational self-organization framework, not a validated molecular biology simulator. The state field is a bounded continuous density evolved by convolutional neighborhood potentials and nonlinear growth rules. It can be useful for studying reaction-diffusion-like dynamics, criticality proxies, soft-body morphology, and emergent computation, but it does not encode biochemical stoichiometry, energy conservation, steric exclusion, or genetic regulatory networks.
 
-### 2. Rigorous Statistical Metrics
-- **Largest Lyapunov Exponent (LLE)**: Implements batched Jacobian linearization to quantify chaos and stability (5,400 steps/sec).
-- **Transfer Entropy (TE)**: Vectorized symbolic transfer entropy estimation (>50,000 pairs/sec) with surrogate data testing for statistical significance (p-values).
-- **Scientific Validation**: Validated against null models (noise) and known causal systems.
+## What Is Implemented
 
-### 3. Neuro-Lenia (Hybrid AI)
-- **Learned Physics**: Demonstrates the ability to "learn" the physical parameters ($\mu, \sigma, K$) required to stabilize arbitrary patterns or solve memory tasks via Backpropagation Through Time (BPTT).
+- Periodic Lenia dynamics with normalized radial kernels and bounded synchronous updates.
+- JAX-accelerated stepping with `jit`, `vmap`, FFT convolution, and differentiable parameters.
+- Criticality metrics: Lyapunov estimation, spatial correlations, entropy, mutual information, and transfer entropy.
+- Neuro-Lenia modules built with Equinox for gradient-based experiments.
+- Locomotion and morphology scripts for soft-robotics-style behavior search.
+- Interactive demos for phase exploration, signal propagation, and NAND-like threshold dynamics.
+- A pytest suite covering physics invariants, metrics, differentiability, locomotion behavior, and NumPy/JAX boundary assumptions.
 
-### 4. Locomotion & Evolution (Auto-Lenia)
-- **Virtual Soft Robotics**: Evolved creatures that achieve consistent locomotion (0.34 displacement/step) via self-organized undulation.
-- **Open-Ended Evolution**: Genetic Algorithm (GA) that co-evolves body morphology and physics parameters for survival and movement.
+## Repository Layout
 
-### 5. Computational Universality
-- **Logic Gates**: Discovered a stable "Soft-NAND" regime at $\mu \approx 0.8$.
-- **Memory**: Constructed a functional **RS-Trigger (Flip-Flop)** capable of storing 1 bit of information via perturbation-induced bistability.
+```text
+src/
+  simulation.py       NumPy reference Lenia engine
+  engine_jax.py       JAX Lenia engine
+  metrics.py          NumPy/SciPy analysis metrics
+  metrics_jax.py      JAX metrics and batched estimators
+  neuro_lenia.py      Equinox differentiable Lenia layer/RNN
+  experiment.py       Parameter-sweep runner
+  analysis.py         Result summaries and plotting helpers
 
-### 6. Sensory-Motor Agents
-- **Chemotaxis**: Implemented reactive agents that sense "chemical" gradients and navigate towards food sources ($\alpha=0.2$ sensory coupling).
+tests/
+  test_simulation_numpy.py  Reference-engine invariants
+  test_physics.py           JAX physics invariants
+  test_metrics.py           Transfer entropy and Lyapunov smoke tests
+  test_neuro.py             Differentiability tests
+  test_locomotion.py        Locomotion behavior tests
+
+scripts/              Experiment, verification, training, and visualization helpers
+paper/                Draft manuscript text
+figures/              Generated figures and demo outputs
+```
 
 ## Installation
 
-Requires Python 3.10+ and JAX.
+Use a virtual environment. The default dependency set installs CPU JAX.
 
 ```bash
-pip install -r requirements.txt
-# For GPU support, consult JAX documentation regarding CUDA installation.
+python -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 ```
 
-## Usage
+For CUDA/TPU support, install the JAX build matching your accelerator from the official JAX instructions, then install the remaining requirements.
 
-### 1. Running Simulations (Demo)
+## Verification
+
+Run the full test suite:
 
 ```bash
-python scripts/view_species.py
+.venv/bin/python -m pytest tests/
 ```
 
-### 2. Differentiable Parameter Search
+Current expected result in this workspace:
 
-Train the system to discover parameters that satisfy specific criteria (e.g., target mass, variance).
+```text
+18 passed
+```
+
+The tests verify determinism, toroidal translation invariance, kernel sanity, transfer entropy behavior, Lyapunov computation shape/NaN safety, differentiability through the Equinox model, and locomotion smoke behavior.
+
+## Running Experiments
+
+Minimal headless smoke run:
 
 ```bash
-python src/search_jax.py
+MPLCONFIGDIR=/tmp/lenia-mplconfig MPLBACKEND=Agg \
+  .venv/bin/python scripts/run_experiment.py \
+  --experiment phase_diagram \
+  --resolution 1 \
+  --grid-size 32 \
+  --workers 1 \
+  --no-lyapunov \
+  --serial \
+  --output /tmp/lenia_smoke
 ```
 
-### 3. Training Neuro-Lenia
-
-Train the hybrid Neuro-Lenia model to perform pattern reconstruction/memory tasks.
+Larger phase diagram scan:
 
 ```bash
-python scripts/train_hybrid_eqx.py
+.venv/bin/python scripts/run_experiment.py \
+  --experiment phase_diagram \
+  --resolution 30 \
+  --grid-size 128 \
+  --workers 4 \
+  --output experiments
 ```
 
-### 4. Verification
-
-Run the full scientific verification suite (Physics invariants, Statistical significance, Differentiability).
+Lyapunov-focused scan:
 
 ```bash
-python -m pytest tests/
+.venv/bin/python scripts/run_experiment.py \
+  --experiment lyapunov \
+  --resolution 20 \
+  --grid-size 128 \
+  --workers 4
 ```
 
-## Project Structure
+## Interactive Demos
 
-- `src/`
-    - `engine_jax.py`: Core differentiable physics engine.
-    - `metrics_jax.py`: Lyapunov and Transfer Entropy implementations.
-    - `neuro_lenia.py`: Equinox modules for Hybrid AI integration.
-    - `search_jax.py`: Gradient-based parameter optimization.
-- `scripts/`: Training and verification scripts.
-- `tests/`: Pytest suite for formal verification.
-- `paper/`: Drafts of scientific publications.
+The demos use Matplotlib interactive windows and require a GUI backend:
+
+```bash
+.venv/bin/python demo.py help
+.venv/bin/python demo.py phase
+.venv/bin/python demo.py signal
+.venv/bin/python demo.py nand
+```
+
+In a headless shell, use `MPLBACKEND=Agg` only for import/start smoke checks. It will not display the interactive window.
+
+## Model Notes
+
+The reference update is synchronous and double-buffered:
+
+1. compute the toroidal convolution potential from the previous state;
+2. apply the nonlinear growth function;
+3. add `dt * growth`;
+4. clip the density field into `[0, 1]`;
+5. swap buffers.
+
+The toroidal boundary condition is intentional: it makes every cell topologically equivalent and matches the JAX engine's translation-invariance tests. This avoids edge-specific artifacts from zero-padded convolution.
+
+## Reproducibility
+
+- `LeniaConfig` is serializable and hashable.
+- Seeds are explicit in the simulation config.
+- Experiment runs persist `config.json`, `results.csv`, `results.parquet`, and `summary.json`.
+- For headless or sandboxed environments, set `MPLCONFIGDIR` to a writable directory to avoid Matplotlib cache warnings.
+
+## Known Limits
+
+- The biological interpretation is qualitative. Treat results as artificial life / dynamical systems experiments unless independently validated against a specific biological mechanism.
+- Long parameter sweeps can be expensive because Lyapunov and correlation metrics require many simulation steps.
+- GPU acceleration depends on a correctly installed JAX accelerator build.
+- Some demo claims are exploratory and should be backed by fresh experiment output before publication.
 
 ## Citation
 
-If you use this codebase in your research, please cite:
-
-```
-@misc{lenia_jax_2026,
+```bibtex
+@misc{lenia_criticality_lab_2026,
   author = {Lenia Criticality Lab},
-  title = {Differentiable Self-Organizing Systems: Accelerating Lenia Dynamics via JAX},
+  title = {Lenia Criticality Lab: Differentiable Self-Organizing Systems},
   year = {2026},
   publisher = {GitHub},
-  journal = {GitHub repository},
   howpublished = {\url{https://github.com/m4rba4s/lenia-criticality-lab}}
 }
 ```

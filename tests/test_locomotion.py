@@ -3,9 +3,9 @@ Unit tests for Locomotion / Soft Robotics functionality.
 """
 
 import pytest
-import jax
-import jax.numpy as jnp
-import equinox as eqx
+jax = pytest.importorskip("jax")
+jnp = pytest.importorskip("jax.numpy")
+eqx = pytest.importorskip("equinox")
 
 from src.neuro_lenia import LeniaRNN
 
