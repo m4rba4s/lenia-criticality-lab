@@ -1,6 +1,6 @@
 # Lenia Criticality Lab
 
-Research code for studying critical dynamics, information flow, and differentiable control in Lenia-style continuous cellular automata.
+JAX/NumPy research lab for Lenia criticality, self-organization, null models, and reservoir-style computation.
 
 The project contains two related simulation paths:
 

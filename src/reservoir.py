@@ -5,7 +5,7 @@ Use Lenia as a computational substrate for machine learning.
 The complex nonlinear dynamics of Lenia transform inputs,
 and we train only a simple linear readout.
 
-This is genuinely novel - nobody has done this before!
+Experimental Lenia reservoir-computing substrate testing nonlinear state expansion.
 """
 
 from dataclasses import dataclass
@@ -144,34 +144,32 @@ class LeniaReservoir:
 
     def transform(self, X: np.ndarray, seed: int = None) -> np.ndarray:
         """
-        Transform inputs through the reservoir.
+        Transform sequence inputs through the reservoir.
+        State is maintained between time steps for temporal memory.
 
         Args:
-            X: Input data, shape (n_samples, n_features) or (n_samples,)
+            X: Input data sequence, shape (n_samples, n_features) or (n_samples,)
             seed: Random seed for reproducibility
 
         Returns:
-            Reservoir states, shape (n_samples, readout_dim)
+            Reservoir states over time, shape (n_samples, readout_dim)
         """
         X = np.atleast_2d(X)
         n_samples = X.shape[0]
 
-        # First pass to get output dimension
-        sim = self._create_base_state(seed)
-        self._encode_input(sim, X[0])
-        sim.run(self.config.compute_steps)
-        sample_output = self._readout(sim)
-
-        # Allocate output
+        # Get output dimension using a dummy simulation
+        test_sim = self._create_base_state(seed)
+        self._encode_input(test_sim, X[0])
+        test_sim.run(self.config.compute_steps)
+        sample_output = self._readout(test_sim)
         outputs = np.zeros((n_samples, len(sample_output)))
-        outputs[0] = sample_output
 
-        # Process remaining samples
-        for i in range(1, n_samples):
-            sim = self._create_base_state(seed)
-            self._encode_input(sim, X[i])
+        # Process the entire sequence sequentially
+        sim = self._create_base_state(seed)
+        for t, u_t in enumerate(X):
+            self._encode_input(sim, np.atleast_1d(u_t))
             sim.run(self.config.compute_steps)
-            outputs[i] = self._readout(sim)
+            outputs[t] = self._readout(sim)
 
         return outputs
 

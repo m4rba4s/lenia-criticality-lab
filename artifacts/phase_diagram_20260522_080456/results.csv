@@ -1,0 +1,2 @@
+mu,sigma,final_mass,mean_mass,mass_std,mean_activity,classification,lyapunov,lyapunov_std,lyapunov_class,correlation_type,correlation_length,correlation_exponent,entropy,spatial_entropy,mutual_info,susceptibility
+0.08,0.005,0.0,0.0,0.0,0.0,dead,,,,,,,,,,

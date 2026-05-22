@@ -124,6 +124,9 @@ def compute_te_pairwise(
     Compute TE(X->Y) for dense time series.
     JIT-compatible implementation using integer packing.
     """
+    if history_length != 1:
+        raise NotImplementedError("compute_te_pairwise currently supports history_length=1 only. General packing logic pending.")
+
     # 1. Discretize
     def discretize(arr):
         # Normalize simple min-max

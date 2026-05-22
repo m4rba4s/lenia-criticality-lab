@@ -10,9 +10,15 @@ test:
 	pytest tests/
 
 reproduce-small:
-	@echo "Running minimal deterministic reproduction pipeline..."
-	python scripts/run_experiment.py --seed 42 --steps 100 --artifact-dir ./artifacts
-	@echo "Artifacts generated in ./artifacts"
+	MPLCONFIGDIR=/tmp/lenia-mplconfig MPLBACKEND=Agg \
+	python scripts/run_experiment.py \
+		--experiment phase_diagram \
+		--resolution 1 \
+		--grid-size 32 \
+		--workers 1 \
+		--no-lyapunov \
+		--serial \
+		--output ./artifacts
 
 clean:
 	rm -rf .pytest_cache
